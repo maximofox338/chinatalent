@@ -1,14 +1,8 @@
 \# Component Specifications
 
-
-
 \## Status: In Design by @frontend
 
-
-
 \### Component Tree
-
-
 
 ```
 
@@ -54,11 +48,7 @@ App
 
 ```
 
-
-
 \### Components (To be filled by @frontend)
-
-
 
 \#### JobCard (Reusable)
 
@@ -76,8 +66,6 @@ Props: {
 
 ```
 
-
-
 \#### SearchForm
 
 ```
@@ -90,11 +78,7 @@ Props: {
 
 ```
 
-
-
 \#### etc...
-
-
 
 \---
 
@@ -106,3 +90,4 @@ Props: {
 
 
 
+```

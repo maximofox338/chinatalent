@@ -1,10 +1,6 @@
 \# API Contract
 
-
-
 \## Status: In Design by @architect/@backend
-
-
 
 \### Base URL
 
@@ -14,8 +10,6 @@
 
 \- Production: https://api.chinatalent.app
 
-
-
 \### Authentication
 
 \- Magic link via Supabase Auth
@@ -23,8 +17,6 @@
 \- Response: Bearer token (JWT)
 
 \- Header: Authorization: Bearer \[token]
-
-
 
 \### Response Format (ALL endpoints)
 
@@ -44,11 +36,7 @@
 
 ```
 
-
-
 \### Endpoints (To be filled by @backend)
-
-
 
 \#### Auth Endpoints
 
@@ -63,8 +51,6 @@ GET /api/auth/me
 POST /api/auth/logout
 
 ```
-
-
 
 \#### Job/Project Endpoints
 
@@ -82,8 +68,6 @@ GET /api/applications (my applications)
 
 ```
 
-
-
 \#### Message Endpoints
 
 ```
@@ -93,8 +77,6 @@ POST /api/messages (send)
 GET /api/messages/:assignmentId (conversation)
 
 ```
-
-
 
 \#### Employment Endpoints (NEW)
 
@@ -109,8 +91,6 @@ POST /api/jobs/:id/offer (make offer)
 GET /api/my-employment (current employment)
 
 ```
-
-
 
 \### Error Codes
 
@@ -130,8 +110,6 @@ SERVER\_ERROR
 
 ```
 
-
-
 \---
 
 \*\*Updated by\*\*: @backend
@@ -140,3 +118,4 @@ SERVER\_ERROR
 
 ```
 
+```

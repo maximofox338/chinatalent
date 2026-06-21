@@ -1,14 +1,10 @@
 \# China Talent Bridge - Shared Context
 
-
-
 \## Project Overview
 
 Platform for hiring Asia talent, full-time employment + freelance.
 
 Legal, secure, no VPN evasion.
-
-
 
 \## Tech Stack (FINAL)
 
@@ -28,8 +24,6 @@ Legal, secure, no VPN evasion.
 
 \- Monitoring: Sentry
 
-
-
 \## Architecture Principles
 
 1\. TypeScript strict mode ALWAYS
@@ -43,8 +37,6 @@ Legal, secure, no VPN evasion.
 5\. No hardcoded secrets
 
 6\. Clear git commits: "Feature: X" or "Fix: Y"
-
-
 
 \## Project Structure
 
@@ -76,8 +68,6 @@ src/
 
 ```
 
-
-
 \## Current Status
 
 \- \*\*Phase\*\*: MVP Development
@@ -94,37 +84,27 @@ src/
 
 \- \*\*Deployment\*\*: Waiting for all code
 
-
-
 \## Key Files (Living Documents)
 
-\- API\_CONTRACT.md - What APIs exist
+\- API_CONTRACT.md - What APIs exist
 
-\- COMPONENT\_SPECS.md - What components exist
+\- COMPONENT_SPECS.md - What components exist
 
 \- SCHEMA.sql - Database structure
 
-\- INSTANCES\_STATUS.md - Who's doing what
-
-
+\- INSTANCES_STATUS.md - Who's doing what
 
 \## Decision Log
 
 (Will be updated by @architect)
 
-
-
 \## Decisions Made
 
 (None yet, will be filled by @architect)
 
-
-
 \## Known Risks
 
 (Will be identified by @architect and @qa)
-
-
 
 \## Model: Full-Time Employment + Freelance
 
@@ -138,8 +118,6 @@ This is a platform for:
 
 3\. Some freelance work on the side
 
-
-
 \## Revenue Model
 
 1\. 10% commission on first year salary (employment)
@@ -150,8 +128,6 @@ This is a platform for:
 
 4\. Premium tools and services
 
-
-
 \## Compliance Notes
 
 \- NO VPN CODE
@@ -161,8 +137,6 @@ This is a platform for:
 \- Legal contracts for employment
 
 \- Terms of Service reviewed
-
-
 
 \## Next Steps
 
@@ -178,3 +152,4 @@ This is a platform for:
 
 ```
 
+```

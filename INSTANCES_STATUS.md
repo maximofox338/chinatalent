@@ -1,10 +1,6 @@
 \# Instances Status \& Coordination
 
-
-
 \## Last Updated: \[Now]
-
-
 
 \### Instance 1 (@architect)
 
@@ -16,9 +12,7 @@
 
 \- Blockers: None
 
-\- Output: Architecture.md, API\_CONTRACT.md, SCHEMA.sql
-
-
+\- Output: Architecture.md, API_CONTRACT.md, SCHEMA.sql
 
 \### Instance 2 (@backend)
 
@@ -32,8 +26,6 @@
 
 \- Output: src/api/\*.ts, tests
 
-
-
 \### Instance 3 (@frontend)
 
 \- Status: ⏳ Waiting
@@ -45,8 +37,6 @@
 \- Blockers: Waiting for API spec
 
 \- Output: src/components/\*.tsx, tests
-
-
 
 \### Instance 4 (@qa)
 
@@ -60,8 +50,6 @@
 
 \- Output: SCHEMA.sql, tests
 
-
-
 \### Instance 5 (@devops)
 
 \- Status: ⏳ Waiting
@@ -73,8 +61,6 @@
 \- Blockers: Waiting for all code
 
 \- Output: Deployed app, monitoring
-
-
 
 \## Key Milestones
 
@@ -92,13 +78,9 @@
 
 \- \[ ] Ready for review
 
-
-
 \## Key Decisions Made
 
 (Will be updated)
-
-
 
 \## Next Checkpoint
 
@@ -108,3 +90,4 @@ Check this file every 2 hours during development
 
 
 
+```
