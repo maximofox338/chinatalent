@@ -1,93 +1,145 @@
-\# Instances Status \& Coordination
+# Instances Status — End of Day 1 (2026-06-22)
 
-\## Last Updated: \[Now]
+═══════════════════════════════════════════════════════════════
 
-\### Instance 1 (@architect)
+## RESUMEN EJECUTIVO
 
-\- Status: 🔵 Not started
+═══════════════════════════════════════════════════════════════
+Fase 0 (Infraestructura) ~90% completa.
 
-\- Task: Design architecture
+- 3 agentes terminaron su trabajo de Fase 0
+- 1 PR abierto con todos los commits (esperando merge)
+- Falta: @backend (auth endpoints) + A6 (Sentry)
+  Próximo hito: Login funcionando end-to-end.
 
-\- ETA: 2-3 hours
+═══════════════════════════════════════════════════════════════
 
-\- Blockers: None
+## @architect — COMPLETE ✅
 
-\- Output: Architecture.md, API_CONTRACT.md, SCHEMA.sql
+═══════════════════════════════════════════════════════════════
+Entregó: ARCHITECTURE.md, SCHEMA.sql, API_CONTRACT.md
 
-\### Instance 2 (@backend)
+- 28 tablas, 10 ADRs con tradeoffs, análisis de riesgos
+- Modelo: empleo full-time + freelance unificado en "listings"
+- Engagements = revenue spine (fees 0.10/0.05/0.02)
+- Plan de 5 fases (marketplace antes que pagos)
+  Riesgos legales flaggeados: EOR, pagos cross-border, PIPL/GDPR.
 
-\- Status: ⏳ Waiting
+═══════════════════════════════════════════════════════════════
 
-\- Task: Implement APIs
+## @devops — Phase 0 COMPLETE ✅ (en PR, sin mergear)
 
-\- ETA: 4-6 hours (after @architect)
+═══════════════════════════════════════════════════════════════
+Branch: phase-0-infrastructure (8 commits, todo Fase 0)
+Commits propios: 1bddb38 (CI), 802ebda (Register fix), c3cc484 (pg)
+Entregó:
 
-\- Blockers: Waiting for architecture
+- Monorepo (npm workspaces: shared, api, web)
+- Vite 8 + plugin-react 6 (0 vulnerabilidades)
+- Node 20 estandarizado (engines en los 3 package.json)
+- TS strict, ESLint, Prettier, husky, .editorconfig, .prettierignore
+- .env.example (ambas apps) + test-connection.ts (verificado live)
+- CI pipeline (.github/workflows/ci.yml) — verde, 22 tests
+- createApp factory + test harness listos para @backend
+  CI atrapó 3 bugs reales antes de correr en remoto.
+  PENDIENTE: A6 (Sentry) — MAÑANA
 
-\- Output: src/api/\*.ts, tests
+═══════════════════════════════════════════════════════════════
 
-\### Instance 3 (@frontend)
+## @qa — Phase 0 COMPLETE ✅ (en PR, sin mergear)
 
-\- Status: ⏳ Waiting
+═══════════════════════════════════════════════════════════════
+Commits: 15861df (migrations+seed+tests), cf3fae6 (path fix), HELPERS.md
+Entregó (todo en apps/api/src/db/):
 
-\- Task: Implement components
+- 15 migraciones idempotentes (001-015) → 28 tablas
+- RLS habilitado + FORCED en las 28 tablas
+- migrate.ts (transaccional, re-run-safe)
+- seed.ts (5 categorías, 20 skills, 2 users, 1 company, 2 listings)
+- **tests**/rls.test.ts (21 tests)
+- HELPERS.md ← @backend DEBE leer esto antes de escribir services
+- SCHEMA.sql (root, consolidado)
+  Verificado en Supabase LIVE: migrate 15/15, seed ok, RLS 21/21 PASS.
+  Helpers clave: app_current_user_id(), is_company_member()
+  Nota: service_role bypassa RLS (solo trusted jobs: billing, audit).
 
-\- ETA: 4-6 hours (after API contract)
+═══════════════════════════════════════════════════════════════
 
-\- Blockers: Waiting for API spec
+## @frontend — Phase 0 COMPLETE ✅ (en PR, sin mergear)
 
-\- Output: src/components/\*.tsx, tests
+═══════════════════════════════════════════════════════════════
+Commit: 0184c2f — auth foundation + app shell (17 files, apps/web/)
+Entregó:
 
-\### Instance 4 (@qa)
+- lib/supabase.ts, hooks/useAuth.tsx, hooks/useProfile.tsx
+- lib/api.ts (Bearer token, {success,data,error,code})
+- pages: Login, Register, Dashboard, NotFound
+- components: Layout, ProtectedRoute, Spinner
+- App.tsx, main.tsx (routing + Tailwind v4)
+  Tested: typecheck/build/lint pass.
+  NOT tested: sin runtime en browser, sin backend (no e2e todavía).
+  Decisión: usar React Query para data-fetching en Phase 1.
+  Next (Phase 1): smoke test auth, luego JobCard/SearchForm/listings.
 
-\- Status: ⏳ Waiting
+═══════════════════════════════════════════════════════════════
 
-\- Task: Design DB, write tests
+## @backend — NOT STARTED ⏳ (PRIORIDAD #1 MAÑANA)
 
-\- ETA: 4-6 hours (parallel with others)
+═══════════════════════════════════════════════════════════════
+UNBLOCKED — tiene todo lo que necesita:
 
-\- Blockers: None (can start on DB)
+- DB viva en Supabase
+- HELPERS.md (cómo conectar sin romper RLS)
+- API_CONTRACT.md (qué endpoints)
+- SCHEMA.sql (estructura)
+- createApp factory + test harness (de @devops)
+  Primeras tareas:
 
-\- Output: SCHEMA.sql, tests
+1. Express skeleton (apps/api/src/index.ts ya parcial, usar createApp)
+2. Auth middleware (validar Supabase JWT)
+3. /api/auth/register + /api/auth/me + logout
+4. Profile endpoints
+   DEBE LEER apps/api/src/db/HELPERS.md ANTES de escribir services.
+   @frontend espera estos endpoints para test e2e.
 
-\### Instance 5 (@devops)
+═══════════════════════════════════════════════════════════════
 
-\- Status: ⏳ Waiting
+## ESTADO DEL PR / GIT
 
-\- Task: Deploy everything
+═══════════════════════════════════════════════════════════════
 
-\- ETA: 2-3 hours (after all others done)
+- Branch phase-0-infrastructure pusheado a GitHub (8 commits)
+- PR abierto (draft) — esperando CI verde → merge a main
+- Una vez mergeado: main tendrá todo Fase 0 unificado
+- TOKEN: rotar después del merge (se expuso con workflow scope)
 
-\- Blockers: Waiting for all code
+═══════════════════════════════════════════════════════════════
 
-\- Output: Deployed app, monitoring
+## ISSUES CONOCIDOS A RESOLVER
 
-\## Key Milestones
+═══════════════════════════════════════════════════════════════
 
-\- \[ ] Architecture complete
+1. Shared types: Project/Job (viejo) → Listing unificado (ADR-002).
+   Arreglar antes de Phase 1. Territorio: packages/shared.
+2. snake_case (API, correcto) vs camelCase (shared types).
+   Arreglar shared types a snake_case.
+3. DATABASE_URL: usa SESSION POOLER (pooler.supabase.com:5432).
+   Direct host es IPv6-only. Password URL-encoded (@→%40). ✅ resuelto.
 
-\- \[ ] API contract finalized
+═══════════════════════════════════════════════════════════════
 
-\- \[ ] All code written
+## PRIORIDADES DÍA 2 (en orden)
 
-\- \[ ] All tests passing
+═══════════════════════════════════════════════════════════════ 0. Merge el PR de Fase 0 (CI verde → merge) + rotar token
 
-\- \[ ] Deployed to staging
+1. Launch @backend → auth endpoints (CRÍTICO, leer HELPERS.md)
+2. @devops → A6 Sentry
+3. Reconciliar shared types (Project/Job → Listing, snake_case)
+4. End-to-end smoke test (frontend ↔ backend) → ¡Login funcionando!
 
-\- \[ ] Smoke tests pass
+═══════════════════════════════════════════════════════════════
 
-\- \[ ] Ready for review
+## RESUME PROMPTS: ver .claude/agents/
 
-\## Key Decisions Made
-
-(Will be updated)
-
-\## Next Checkpoint
-
-Check this file every 2 hours during development
-
-```
-
-
-
-```
+═══════════════════════════════════════════════════════════════
+backend-resume.md, frontend-resume.md, qa-resume.md, devops-resume.md
