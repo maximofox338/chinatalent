@@ -26,7 +26,8 @@ import { Pool, type PoolClient } from 'pg';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// This file lives in src/db/__tests__, so .env is three levels up (apps/api/.env).
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 const databaseUrl = process.env.DATABASE_URL;
 const supabaseUrl = process.env.SUPABASE_URL;
