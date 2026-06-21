@@ -24,12 +24,12 @@ const COUNTRIES = [
   { code: 'GB', label: 'United Kingdom' },
 ];
 
-interface RegisterPayload {
+type RegisterPayload = {
   role: UserRole;
   full_name: string;
   country_code: string;
   preferred_language: string;
-}
+};
 
 /**
  * Shown after a user's first sign-in when they have no profile yet. Captures
