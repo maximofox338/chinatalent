@@ -12,7 +12,7 @@ Legal, secure, no VPN evasion.
 
 \## Tech Stack (FINAL)
 
-\- Backend: Node.js 18 + Express + TypeScript
+\- Backend: Node.js 20 + Express + TypeScript
 
 \- Frontend: React 18 + TypeScript + Tailwind CSS
 

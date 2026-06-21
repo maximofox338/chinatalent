@@ -33,7 +33,7 @@ npm run build        # build every workspace
 
 ## Tech stack
 
-- Backend: Node.js 18 + Express + TypeScript
+- Backend: Node.js 20 + Express + TypeScript
 - Frontend: React 18 + TypeScript + Tailwind CSS
 - Database: PostgreSQL (Supabase managed)
 - Auth: Supabase Auth (magic links)

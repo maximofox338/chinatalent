@@ -7,6 +7,9 @@
     "packages/*",
     "apps/*"
   ],
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev --workspaces --if-present",

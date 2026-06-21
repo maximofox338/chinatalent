@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "China Talent Bridge frontend (React)",
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

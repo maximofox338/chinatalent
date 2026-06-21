@@ -4,6 +4,9 @@
   "private": true,
   "description": "China Talent Bridge backend API (Express)",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
