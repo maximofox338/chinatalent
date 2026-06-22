@@ -1,3 +1,5 @@
+// Must come first so Sentry instruments http/express before they load.
+import './instrument';
 import { createApp } from './app';
 
 const PORT = Number(process.env.PORT ?? 3000);
