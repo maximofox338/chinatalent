@@ -1,32 +1,45 @@
 import express, { type Express, type Request, type Response } from 'express';
-import type { ApiResponse, User } from '@chinatalent/shared';
+import * as Sentry from '@sentry/node';
+import authRouter from './api/auth';
+import profilesRouter from './api/profiles';
+import workersRouter from './api/workers';
+import companiesRouter from './api/companies';
+import { errorHandler, notFound } from './middleware/error';
+import { sentryEnabled } from './instrument';
+import { sendOk } from './utils/http';
 
 /**
  * Builds the Express application. Kept separate from server startup so tests
  * can exercise routes without binding a port (see app.test.ts).
+ *
+ * Order matters: JSON body parsing → feature routers → 404 fallback → error
+ * handling. Sentry's error handler runs first (to capture), then ours formats
+ * the standard { success, error, code } envelope.
  */
 export function createApp(): Express {
   const app = express();
   app.use(express.json());
 
-  // Health check.
+  // Health check (no auth, no DB).
   app.get('/health', (_req: Request, res: Response) => {
-    const body: ApiResponse<{ status: 'ok' }> = {
-      success: true,
-      data: { status: 'ok' },
-    };
-    res.json(body);
+    sendOk(res, { status: 'ok' as const });
   });
 
-  // Placeholder for the auth "me" endpoint (see API_CONTRACT.md).
-  app.get('/api/auth/me', (_req: Request, res: Response) => {
-    const body: ApiResponse<User> = {
-      success: false,
-      error: 'Not implemented',
-      code: 'SERVER_ERROR',
-    };
-    res.status(501).json(body);
-  });
+  // Feature routers.
+  app.use('/api/auth', authRouter);
+  app.use('/api/profiles', profilesRouter);
+  app.use('/api/workers', workersRouter);
+  app.use('/api/companies', companiesRouter);
+
+  // Unmatched routes.
+  app.use(notFound);
+
+  // Error handling — must come after all routes. Sentry captures first, then
+  // our handler responds with the standard shape.
+  if (sentryEnabled) {
+    Sentry.setupExpressErrorHandler(app);
+  }
+  app.use(errorHandler);
 
   return app;
 }
