@@ -2,17 +2,29 @@
 
 ═══════════════════════════════════════════════════════════════
 
-## RESUMEN EJECUTIVO
+\## ÚLTIMO UPDATE: Fin Primera sesión Día 2 (2026-06-22)
 
-═══════════════════════════════════════════════════════════════
-Fase 0 (Infraestructura) ~90% completa.
+FASE 0 COMPLETA ✅ (todo en main, pusheado)
 
-- 3 agentes terminaron su trabajo de Fase 0
-- 1 PR abierto con todos los commits (esperando merge)
-- Falta: @backend (auth endpoints) + A6 (Sentry)
-  Próximo hito: Login funcionando end-to-end.
+\- @backend: auth endpoints DONE (register, me, logout + profiles/workers/companies)
 
-═══════════════════════════════════════════════════════════════
+\- @devops: Sentry DONE
+
+\- Todo mergeado a main (PR #2)
+
+PRÓXIMO PASO (Día 3):
+
+1\. SMOKE TEST end-to-end: lanzar @frontend, probar login real
+
+&#x20; (frontend ↔ backend ↔ Supabase) ← EL OBJETIVO
+
+2\. Si funciona: empezar Fase 1 (job browser, listings)
+
+3\. Pendiente menor: reconciliar shared types (Project/Job → Listing)
+
+4\. Pendiente menor: subir testTimeout para rls.test.ts (timeouts de red)
+
+5\. Pendiente: rotar token antes de deployment═══════════════════════════════════════════════════════════════
 
 ## @architect — COMPLETE ✅
 
