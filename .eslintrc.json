@@ -15,5 +15,15 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["dist", "build", "node_modules", "coverage"]
+  "ignorePatterns": ["dist", "build", "node_modules", "coverage"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  }
 }
