@@ -27,7 +27,7 @@ const COUNTRIES = [
 type RegisterPayload = {
   role: UserRole;
   full_name: string;
-  country_code: string;
+  country: string;
   preferred_language: string;
 };
 
@@ -59,7 +59,7 @@ export default function Register(): JSX.Element {
       const payload: RegisterPayload = {
         role,
         full_name: fullName.trim(),
-        country_code: countryCode,
+        country: countryCode,
         preferred_language: language,
       };
       await api.post<User>('/api/auth/register', payload);
