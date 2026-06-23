@@ -57,4 +57,14 @@ export const env = {
   get port(): number {
     return Number(optional('PORT', '3000'));
   },
+  /**
+   * Allowed browser origins for CORS. Comma-separated so staging/prod can list
+   * several; defaults to the local Vite dev server. Returned as a parsed array.
+   */
+  get corsOrigins(): string[] {
+    return optional('CORS_ORIGIN', 'http://localhost:5173')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+  },
 };
