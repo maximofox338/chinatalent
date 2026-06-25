@@ -1,157 +1,90 @@
-# Instances Status — End of Day 1 (2026-06-22)
+# INSTANCES_STATUS.md — China Talent Bridge
 
-═══════════════════════════════════════════════════════════════
+## El "heartbeat" de coordinación: qué se hizo, qué falta, quién hace qué
 
-\## ÚLTIMO UPDATE: Fin Primera sesión Día 2 (2026-06-22)
+> **Última actualización**: Fin Día 3 — Fase 0 COMPLETA y VALIDADA. Login funciona end-to-end. Próximo: auditoría.
 
-FASE 0 COMPLETA ✅ (todo en main, pusheado)
+---
 
-\- @backend: auth endpoints DONE (register, me, logout + profiles/workers/companies)
+## 🎉 HITO: LA PLATAFORMA ESTÁ VIVA
 
-\- @devops: Sentry DONE
+El smoke test end-to-end se completó con éxito. Un usuario real se registró, recibió el magic link, hizo click, y se logueó al dashboard. Toda la cadena (frontend → backend → Supabase) funciona.
 
-\- Todo mergeado a main (PR #2)
+---
 
-PRÓXIMO PASO (Día 3):
+## ESTADO POR AGENTE
 
-1\. SMOKE TEST end-to-end: lanzar @frontend, probar login real
+### @backend — Fase 0 COMPLETA ✅
 
-&#x20; (frontend ↔ backend ↔ Supabase) ← EL OBJETIVO
+- Servidor Express (createApp factory), auth middleware (Supabase JWT validation).
+- Endpoints: POST /api/auth/register, GET /api/auth/me, POST /api/auth/logout, /api/profiles/me, /api/workers, /api/companies.
+- Respeta contrato RLS: cliente con JWT del usuario por defecto; service_role solo para bootstrap del company owner (con re-check en código).
+- **CORS agregado** (commit 3e97f7f): middleware primero en la cadena, whitelist configurable vía env var CORS_ORIGIN (default http://localhost:5173, acepta lista separada por comas). Methods: GET/POST/PATCH/OPTIONS. Headers: Content-Type/Authorization. Sin credentials (usa bearer tokens). Probado: preflight devuelve los headers, origen no permitido NO recibe ACAO.
+- Tests: 21/21 propios + 2 de CORS pasan. Requiere SUPABASE_ANON_KEY en apps/api/.env.
 
-2\. Si funciona: empezar Fase 1 (job browser, listings)
+### @frontend — Fase 0 COMPLETA ✅
 
-3\. Pendiente menor: reconciliar shared types (Project/Job → Listing)
+- Auth shell: supabase client, useAuth/useProfile, api.ts, Login/Register/Dashboard/NotFound, Layout/ProtectedRoute/Spinner, routing, Tailwind v4.
+- **Fix country** (commit 8b83743): Register.tsx enviaba country_code, el backend espera country. Arreglado y verificado con registro real (201).
+- Smoke test e2e ejecutado por @frontend: backend boots ✅, frontend boots ✅, auth flow verificado contra Supabase live (register → me → profile lifecycle).
 
-4\. Pendiente menor: subir testTimeout para rls.test.ts (timeouts de red)
+### @qa — Fase 0 COMPLETA ✅
 
-5\. Pendiente: rotar token antes de deployment═══════════════════════════════════════════════════════════════
+- Migraciones 001-015 (28 tablas, RLS forzada), migrate.ts, seed.ts, rls.test.ts (21/21 en live Supabase), HELPERS.md.
+- DATABASE_URL usa Session pooler (resuelto).
 
-## @architect — COMPLETE ✅
+### @devops — Fase 0 COMPLETA ✅
 
-═══════════════════════════════════════════════════════════════
-Entregó: ARCHITECTURE.md, SCHEMA.sql, API_CONTRACT.md
+- Monorepo, Node 20, linters/husky, .env.example, CI pipeline (verde), A6 Sentry (backend + frontend, no-op si no hay DSN).
 
-- 28 tablas, 10 ADRs con tradeoffs, análisis de riesgos
-- Modelo: empleo full-time + freelance unificado en "listings"
-- Engagements = revenue spine (fees 0.10/0.05/0.02)
-- Plan de 5 fases (marketplace antes que pagos)
-  Riesgos legales flaggeados: EOR, pagos cross-border, PIPL/GDPR.
+### @architect — Diseño COMPLETO ✅
 
-═══════════════════════════════════════════════════════════════
+- ARCHITECTURE.md (ahora en el repo), SCHEMA.sql, API_CONTRACT.md, 10 ADRs, 28-table schema.
+- PRÓXIMA TAREA: diseñar los 3 checklists de auditoría (ver plan abajo).
 
-## @devops — Phase 0 COMPLETE ✅ (en PR, sin mergear)
+---
 
-═══════════════════════════════════════════════════════════════
-Branch: phase-0-infrastructure (8 commits, todo Fase 0)
-Commits propios: 1bddb38 (CI), 802ebda (Register fix), c3cc484 (pg)
-Entregó:
+## TODO EN MAIN (sincronizado en GitHub)
 
-- Monorepo (npm workspaces: shared, api, web)
-- Vite 8 + plugin-react 6 (0 vulnerabilidades)
-- Node 20 estandarizado (engines en los 3 package.json)
-- TS strict, ESLint, Prettier, husky, .editorconfig, .prettierignore
-- .env.example (ambas apps) + test-connection.ts (verificado live)
-- CI pipeline (.github/workflows/ci.yml) — verde, 22 tests
-- createApp factory + test harness listos para @backend
-  CI atrapó 3 bugs reales antes de correr en remoto.
-  PENDIENTE: A6 (Sentry) — MAÑANA
+- Repo: github.com/maximofox338/chinatalent
+- Fase 0 completa, login e2e funcionando, todo pusheado.
 
-═══════════════════════════════════════════════════════════════
+---
 
-## @qa — Phase 0 COMPLETE ✅ (en PR, sin mergear)
+## PRÓXIMO PASO: AUDITORÍA (antes de Fase 1)
 
-═══════════════════════════════════════════════════════════════
-Commits: 15861df (migrations+seed+tests), cf3fae6 (path fix), HELPERS.md
-Entregó (todo en apps/api/src/db/):
+Secuencia acordada:
 
-- 15 migraciones idempotentes (001-015) → 28 tablas
-- RLS habilitado + FORCED en las 28 tablas
-- migrate.ts (transaccional, re-run-safe)
-- seed.ts (5 categorías, 20 skills, 2 users, 1 company, 2 listings)
-- **tests**/rls.test.ts (21 tests)
-- HELPERS.md ← @backend DEBE leer esto antes de escribir services
-- SCHEMA.sql (root, consolidado)
-  Verificado en Supabase LIVE: migrate 15/15, seed ok, RLS 21/21 PASS.
-  Helpers clave: app_current_user_id(), is_company_member()
-  Nota: service_role bypassa RLS (solo trusted jobs: billing, audit).
+1. ✅ ETAPA 0 — Smoke test (COMPLETO).
+2. ⏳ ETAPA 1 — @architect diseña 3 checklists de auditoría (seguridad, arquitectura, funcional). ← SIGUIENTE
+3. ⏳ ETAPA 2 — Auditores FRESCOS ejecutan read-only en paralelo (seguridad + arquitectura).
+4. ⏳ ETAPA 3 — Fundador + estratega priorizan hallazgos (crítico/menor/nice-to-have).
+5. ⏳ ETAPA 4 — Constructores arreglan lo crítico.
+6. ⏳ ETAPA 5 — Fase 1 (job browser, listings).
 
-═══════════════════════════════════════════════════════════════
+Principio: quien audita NO es quien construyó (auditores = instancias frescas, read-only).
 
-## @frontend — Phase 0 COMPLETE ✅ (en PR, sin mergear)
+---
 
-═══════════════════════════════════════════════════════════════
-Commit: 0184c2f — auth foundation + app shell (17 files, apps/web/)
-Entregó:
+## PENDIENTES TÉCNICOS (a resolver en auditoría/fix o antes de Fase 1)
 
-- lib/supabase.ts, hooks/useAuth.tsx, hooks/useProfile.tsx
-- lib/api.ts (Bearer token, {success,data,error,code})
-- pages: Login, Register, Dashboard, NotFound
-- components: Layout, ProtectedRoute, Spinner
-- App.tsx, main.tsx (routing + Tailwind v4)
-  Tested: typecheck/build/lint pass.
-  NOT tested: sin runtime en browser, sin backend (no e2e todavía).
-  Decisión: usar React Query para data-fetching en Phase 1.
-  Next (Phase 1): smoke test auth, luego JobCard/SearchForm/listings.
+1. **Reconciliar tipos compartidos** (packages/shared): Project/Job → Listing unificado (ADR-002), y camelCase → snake_case para matchear la API. Consecuencia confirmada: Dashboard mostraba "Welcome, there!" en vez del nombre. REQUERIDO antes de Fase 1.
+2. **ErrorCode union obsoleto**: quitar PROJECT_NOT_FOUND, agregar NOT_FOUND y CONFLICT.
+3. **rls.test.ts timeouts**: subir testTimeout para la suite de DB live (latencia del pooler, no bug).
+4. **Rotar token de GitHub** expuesto, antes de wirear credenciales de deploy.
+5. **Bump actions/checkout y setup-node a v5** (limpiar warning de Node 20 deprecation en CI).
 
-═══════════════════════════════════════════════════════════════
+---
 
-## @backend — NOT STARTED ⏳ (PRIORIDAD #1 MAÑANA)
+## DEPLOYMENT (diferido)
 
-═══════════════════════════════════════════════════════════════
-UNBLOCKED — tiene todo lo que necesita:
+@devops listo para Vercel + Railway cuando se decida shippear a staging. Requiere antes: rotar token + auditoría. Vercel MCP tools conectadas del lado de @devops.
 
-- DB viva en Supabase
-- HELPERS.md (cómo conectar sin romper RLS)
-- API_CONTRACT.md (qué endpoints)
-- SCHEMA.sql (estructura)
-- createApp factory + test harness (de @devops)
-  Primeras tareas:
+---
 
-1. Express skeleton (apps/api/src/index.ts ya parcial, usar createApp)
-2. Auth middleware (validar Supabase JWT)
-3. /api/auth/register + /api/auth/me + logout
-4. Profile endpoints
-   DEBE LEER apps/api/src/db/HELPERS.md ANTES de escribir services.
-   @frontend espera estos endpoints para test e2e.
+## CÓMO ARRANCAR CADA DÍA
 
-═══════════════════════════════════════════════════════════════
-
-## ESTADO DEL PR / GIT
-
-═══════════════════════════════════════════════════════════════
-
-- Branch phase-0-infrastructure pusheado a GitHub (8 commits)
-- PR abierto (draft) — esperando CI verde → merge a main
-- Una vez mergeado: main tendrá todo Fase 0 unificado
-- TOKEN: rotar después del merge (se expuso con workflow scope)
-
-═══════════════════════════════════════════════════════════════
-
-## ISSUES CONOCIDOS A RESOLVER
-
-═══════════════════════════════════════════════════════════════
-
-1. Shared types: Project/Job (viejo) → Listing unificado (ADR-002).
-   Arreglar antes de Phase 1. Territorio: packages/shared.
-2. snake_case (API, correcto) vs camelCase (shared types).
-   Arreglar shared types a snake_case.
-3. DATABASE_URL: usa SESSION POOLER (pooler.supabase.com:5432).
-   Direct host es IPv6-only. Password URL-encoded (@→%40). ✅ resuelto.
-
-═══════════════════════════════════════════════════════════════
-
-## PRIORIDADES DÍA 2 (en orden)
-
-═══════════════════════════════════════════════════════════════ 0. Merge el PR de Fase 0 (CI verde → merge) + rotar token
-
-1. Launch @backend → auth endpoints (CRÍTICO, leer HELPERS.md)
-2. @devops → A6 Sentry
-3. Reconciliar shared types (Project/Job → Listing, snake_case)
-4. End-to-end smoke test (frontend ↔ backend) → ¡Login funcionando!
-
-═══════════════════════════════════════════════════════════════
-
-## RESUME PROMPTS: ver .claude/agents/
-
-═══════════════════════════════════════════════════════════════
-backend-resume.md, frontend-resume.md, qa-resume.md, devops-resume.md
+1. cd C:\Users\arbit\Desktop\chinatalent
+2. git pull origin main
+3. Lanzar agentes NUEVOS con sus resume prompts (.claude/agents/)
+4. Cada agente: commit local, NO push. El fundador coordina pushes.
